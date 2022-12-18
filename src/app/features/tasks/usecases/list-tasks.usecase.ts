@@ -1,14 +1,14 @@
 import { CacheRepository } from "../../../shared/repositories/cache.repository";
-import { UserRepository } from "../repositories/user.repository";
+import { UserRepository } from "../../user/repositories/user.repository";
 
-export class ListUsersUseCase {
+export class ListTasksUseCase {
   constructor(
     private repository: UserRepository,
     private cacheRepository: CacheRepository
   ) {}
 
   public async execute() {
-    const cachedList = await this.cacheRepository.get("users");
+    const cachedList = await this.cacheRepository.get("tasks");
 
     if (cachedList) {
       return {
@@ -20,7 +20,7 @@ export class ListUsersUseCase {
     const result = await this.repository.list();
     const resultJson = result.map((item) => item.toJson());
 
-    await this.cacheRepository.set("users", resultJson);
+    await this.cacheRepository.set("tasks", resultJson);
 
     return resultJson;
   }

@@ -14,9 +14,11 @@ export class CreateTaskUseCase {
   ) {}
 
   public async execute(data: CreateTaskDTO) {
-    const task = new TasksModel(data.title, data.description, user);
+    const task = new TasksModel(data.title, data.description);
 
     const result = await this.repository.create(task);
+
+    await this.cacheRepository.delete("tasks");
 
     return result.toJson();
   }

@@ -6,9 +6,9 @@ export class TasksModel {
 
   constructor(
     private _title: string,
-    private _description: string,
-    private _user: UserModel
-  ) {
+    private _description: string
+  ) //private _user: UserModel
+  {
     this._id = createUuid();
   }
 
@@ -16,48 +16,29 @@ export class TasksModel {
     return this._title;
   }
 
-  public set title(title: string) {
-    this._title = title;
-  }
-
   public get description() {
     return this._description;
   }
 
-  public set description(description: string) {
-    this._description = description;
-  }
+  /*  public get user() {
+    return this._user;
+  } */
 
   public get id() {
     return this._id;
   }
 
-  public get tasks(): string[] {
-    return this.tasks ?? [];
-  }
-
-  public get user() {
-    return this._user;
-  }
-
   // Adapter
-  public getTasks() {
+  public toJson() {
     return {
       id: this._id,
       title: this._title,
       description: this._description,
-      tasks: this.tasks,
-      user: this.user,
     };
   }
 
-  public static create(
-    id: string,
-    title: string,
-    description: string,
-    user: UserModel
-  ) {
-    const tasks = new TasksModel(title, description, user);
+  public static create(id: string, title: string, description: string) {
+    const tasks = new TasksModel(title, description);
     tasks._id = id;
 
     return tasks;

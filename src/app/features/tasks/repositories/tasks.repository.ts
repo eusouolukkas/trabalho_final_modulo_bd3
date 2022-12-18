@@ -1,9 +1,9 @@
 import { DatabaseConnection } from "../../../../main/database/typeorm.connection";
 import { TasksModel } from "../../../models/tasks.model";
 import { TasksEntity } from "../../../shared/entities/tasks.entity";
-import { UserRepository } from "../../user/repositories/user.repository";
 
 interface UpdateTasksDTO {
+  id: string;
   title?: string;
   description?: string;
 }
@@ -13,52 +13,67 @@ export class TasksRepository {
     DatabaseConnection.connection.getRepository(TasksEntity);
 
   public async list() {
-    return await this._repository.find({
+    const result = await this._repository.find({
       relations: {
         user: true,
       },
     });
+
+    const tasks = result.map((item) => {
+      return this.mapEntityToModel(item);
+    });
+
+    return tasks;
   }
 
   public async getById(id: string) {
-    return await this._repository.findOneBy({
+    const result = await this._repository.findOneBy({
       id,
     });
+
+    if (!result) {
+      return null;
+    }
+
+    return this.mapEntityToModel(result);
   }
 
   public async create(tasks: TasksModel) {
-    const userRepository = new UserRepository();
-    const user = await userRepository.get(tasks.user.id);
-
-    if (!user) {
-      throw new Error("Usuário não existe!");
-    }
-
-    const tasksEntity = this._repository.create({
+    //const userRepository = new UserRepository();
+    const taskEntity = this._repository.create({
       id: tasks.id,
       title: tasks.title,
       description: tasks.description,
-      user: user ?? undefined,
     });
 
-    return await this._repository.save(tasksEntity);
+    const result = await this._repository.save(taskEntity);
+
+    return this.mapEntityToModel(result);
   }
 
-  public async update(tasksEntity: TasksEntity, data: UpdateTasksDTO) {
-    if (data.title) {
-      tasksEntity.title = data.title;
-    }
+  public async update(task: UpdateTasksDTO) {
+    const result = await this._repository.update(
+      {
+        id: task.id,
+      },
+      {
+        title: task.title,
+        description: task.description,
+      }
+    );
 
-    if (data.description) {
-      tasksEntity.description = data.description;
-    }
-
-    return await this._repository.save(tasksEntity);
+    return result.affected ?? 0;
   }
 
   public async delete(id: string) {
     return await this._repository.delete({
       id,
     });
+  }
+
+  private mapEntityToModel(item: TasksEntity) {
+    const task = TasksModel.create(item.id, item.title, item.description);
+
+    return task;
   }
 }

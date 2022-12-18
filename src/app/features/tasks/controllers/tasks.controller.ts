@@ -1,19 +1,26 @@
-import { Request, Response } from "express";
+/* import { Request, Response } from "express";
 import { TasksModel } from "../../../models/tasks.model";
 import { UserModel } from "../../../models/user.model";
 import { CacheRepository } from "../../../shared/repositories/cache.repository";
 import { UserRepository } from "../../user/repositories/user.repository";
 import { TasksRepository } from "../repositories/tasks.repository";
 import { CreateTaskUseCase } from "../usecases/create-task.usecase";
+import { ListTasksUseCase } from "../usecases/list-tasks.usecase";
+import { UpdateTaskUseCase } from "../usecases/update-task.usecase";
 
 export class TasksController {
   public async listTask(req: Request, res: Response) {
     try {
-      const repository = new TasksRepository();
-      const result = await repository.list();
+      const usecase = new ListTasksUseCase(
+        new UserRepository(),
+        new CacheRepository()
+      );
+
+      const result = await usecase.execute();
 
       return res.status(200).send({
         ok: true,
+        message: "Listando todas as tarefas!",
         data: result,
       });
     } catch (error: any) {
@@ -30,8 +37,11 @@ export class TasksController {
       const { taskId } = req.params;
       const { title, description } = req.body;
 
-      const repository = new TasksRepository();
-      const result = await repository.getById(taskId);
+      const usecase = new UpdateTaskUseCase(
+        new TasksRepository(),
+        new CacheRepository()
+      );
+      const result = await usecase.execute(taskId);
 
       if (!result) {
         return res.status(404).send({
@@ -59,7 +69,7 @@ export class TasksController {
     }
   }
 
-  /*  public async createTask(req: Request, res: Response) {
+  /* public async createTask(req: Request, res: Response) {
     try {
       const { userId } = req.params;
       const { title, description } = req.body;
@@ -69,26 +79,10 @@ export class TasksController {
         new CacheRepository()
       );
 
-      const userResult = await usecase.get(userId);
-
-      if (!userResult) {
-        return res.status(404).send({
-          ok: false,
-          message: "Usuário não encontrado",
-        });
-      }
-
-      const user = UserModel.create(
-        userResult.id,
-        userResult.email,
-        userResult.password,
-        userResult.name
-      );
-
-      const tasks = new TasksModel(title, description, user);
-
-      const tasksRepository = new TasksRepository();
-      const result = await tasksRepository.create(tasks);
+      const result = await usecase.execute({
+        title,
+        description
+      });
 
       return res.status(201).send({
         ok: true,
@@ -102,7 +96,7 @@ export class TasksController {
         error: error.toString(),
       });
     }
-  } */
+  } 
 
   public async deleteTask(req: Request, res: Response) {
     try {
@@ -124,3 +118,4 @@ export class TasksController {
     }
   }
 }
+ */
