@@ -1,8 +1,5 @@
-/* import { Request, Response } from "express";
-import { TasksModel } from "../../../models/tasks.model";
-import { UserModel } from "../../../models/user.model";
+import { Request, Response } from "express";
 import { CacheRepository } from "../../../shared/repositories/cache.repository";
-import { UserRepository } from "../../user/repositories/user.repository";
 import { TasksRepository } from "../repositories/tasks.repository";
 import { CreateTaskUseCase } from "../usecases/create-task.usecase";
 import { ListTasksUseCase } from "../usecases/list-tasks.usecase";
@@ -12,7 +9,7 @@ export class TasksController {
   public async listTask(req: Request, res: Response) {
     try {
       const usecase = new ListTasksUseCase(
-        new UserRepository(),
+        new TasksRepository(),
         new CacheRepository()
       );
 
@@ -32,7 +29,7 @@ export class TasksController {
     }
   }
 
-  public async updateTask(req: Request, res: Response) {
+  /* public async updateTask(req: Request, res: Response) {
     try {
       const { taskId } = req.params;
       const { title, description } = req.body;
@@ -67,9 +64,9 @@ export class TasksController {
         error: error.toString(),
       });
     }
-  }
+  } */
 
-  /* public async createTask(req: Request, res: Response) {
+  public async createTask(req: Request, res: Response) {
     try {
       const { userId } = req.params;
       const { title, description } = req.body;
@@ -81,7 +78,8 @@ export class TasksController {
 
       const result = await usecase.execute({
         title,
-        description
+        description,
+        userId,
       });
 
       return res.status(201).send({
@@ -96,7 +94,7 @@ export class TasksController {
         error: error.toString(),
       });
     }
-  } 
+  }
 
   public async deleteTask(req: Request, res: Response) {
     try {
@@ -118,4 +116,3 @@ export class TasksController {
     }
   }
 }
- */

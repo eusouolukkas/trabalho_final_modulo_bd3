@@ -1,22 +1,20 @@
-import { TasksModel } from "../../../models/tasks.model";
 import { CacheRepository } from "../../../shared/repositories/cache.repository";
-import { UserRepository } from "../../user/repositories/user.repository";
+import { TasksRepository } from "../repositories/tasks.repository";
 
-interface CreateTaskDTO {
+export interface CreateTaskDTO {
   title: string;
   description: string;
+  userId: string;
 }
 
 export class CreateTaskUseCase {
   constructor(
-    private repository: UserRepository,
+    private repository: TasksRepository,
     private cacheRepository: CacheRepository
   ) {}
 
   public async execute(data: CreateTaskDTO) {
-    const task = new TasksModel(data.title, data.description);
-
-    const result = await this.repository.create(task);
+    const result = await this.repository.create(data);
 
     await this.cacheRepository.delete("tasks");
 
