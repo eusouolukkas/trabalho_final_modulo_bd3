@@ -7,7 +7,7 @@ export const createServer = () => {
   app.use(express.json());
   app.use(cors());
 
-  app.use("/user", userRoutes);
+  app.use("/users", userRoutes);
 
   return app;
 };

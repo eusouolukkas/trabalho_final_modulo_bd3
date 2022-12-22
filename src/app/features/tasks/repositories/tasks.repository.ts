@@ -1,6 +1,8 @@
 import { DatabaseConnection } from "../../../../main/database/typeorm.connection";
 import { TasksModel } from "../../../models/tasks.model";
+import { UserModel } from "../../../models/user.model";
 import { TasksEntity } from "../../../shared/entities/tasks.entity";
+import { UserRepository } from "../../user/repositories/user.repository";
 
 interface UpdateTasksDTO {
   id: string;
@@ -38,17 +40,24 @@ export class TasksRepository {
     return this.mapEntityToModel(result);
   }
 
-  public async create(tasks: TasksModel) {
-    //const userRepository = new UserRepository();
+  public async create(task: TasksModel) {
+    const userRepository = new UserRepository();
+    const user = await userRepository.get(task.user.id);
+
+    if (!user) {
+      throw new Error("User is not found!");
+    }
+
     const taskEntity = this._repository.create({
-      id: tasks.id,
-      title: tasks.title,
-      description: tasks.description,
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      user: user,
     });
 
-    const result = await this._repository.save(taskEntity);
+    await this._repository.save(taskEntity);
 
-    return this.mapEntityToModel(result);
+    return this.mapEntityToModel(taskEntity);
   }
 
   public async update(task: UpdateTasksDTO) {
@@ -71,9 +80,19 @@ export class TasksRepository {
     });
   }
 
-  private mapEntityToModel(item: TasksEntity) {
-    const task = TasksModel.create(item.id, item.title, item.description);
+  private mapEntityToModel(taskEntity: TasksEntity) {
+    const user = UserModel.create(
+      taskEntity.user.name,
+      taskEntity.user.email,
+      taskEntity.user.password,
+      taskEntity.user.id
+    );
 
-    return task;
+    return TasksModel.create(
+      taskEntity.id,
+      taskEntity.title,
+      taskEntity.description,
+      user
+    );
   }
 }

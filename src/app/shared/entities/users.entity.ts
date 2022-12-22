@@ -2,11 +2,11 @@ import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn } from "typeorm";
 import { TasksEntity } from "./tasks.entity";
 
 @Entity({
-  name: "user",
+  name: "users",
 })
 export class UserEntity {
   @PrimaryColumn()
-  id!: string;
+  id: string;
 
   @Column({
     length: 60,

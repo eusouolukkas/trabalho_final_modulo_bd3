@@ -107,6 +107,8 @@ export class UserController {
     try {
       const { id } = req.params;
       const { email, password } = req.body;
+      console.log(req);
+      console.log(req.params);
 
       const usecase = new UpdateUserUseCase(
         new UserRepository(),

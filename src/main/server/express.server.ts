@@ -5,10 +5,10 @@ import { createServer } from "../config/express.config";
 export const runServer = () => {
   const app = createServer();
 
-  app.use("/list", userRoutes);
+  /*  app.use("/list", userRoutes);
   app.use("/create", userRoutes);
   app.use("/:id", userRoutes);
-  app.use("/login", userRoutes);
+  app.use("/login", userRoutes); */
 
   //app.use("/tasks/:userId", tasksRoutes);
 

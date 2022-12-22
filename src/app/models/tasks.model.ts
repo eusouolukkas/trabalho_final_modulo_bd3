@@ -6,9 +6,9 @@ export class TasksModel {
 
   constructor(
     private _title: string,
-    private _description: string
-  ) //private _user: UserModel
-  {
+    private _description: string,
+    private _user: UserModel
+  ) {
     this._id = createUuid();
   }
 
@@ -20,9 +20,9 @@ export class TasksModel {
     return this._description;
   }
 
-  /*  public get user() {
+  public get user() {
     return this._user;
-  } */
+  }
 
   public get id() {
     return this._id;
@@ -34,11 +34,17 @@ export class TasksModel {
       id: this._id,
       title: this._title,
       description: this._description,
+      user: this._user,
     };
   }
 
-  public static create(id: string, title: string, description: string) {
-    const tasks = new TasksModel(title, description);
+  public static create(
+    id: string,
+    title: string,
+    description: string,
+    user: UserModel
+  ) {
+    const tasks = new TasksModel(title, description, user);
     tasks._id = id;
 
     return tasks;

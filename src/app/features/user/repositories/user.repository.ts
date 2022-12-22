@@ -1,4 +1,4 @@
-import { UserEntity } from "../../../shared/entities/user.entity";
+import { UserEntity } from "../../../shared/entities/users.entity";
 import { UserModel } from "../../../models/user.model";
 import { DatabaseConnection } from "../../../../main/database/typeorm.connection";
 
@@ -79,6 +79,7 @@ export class UserRepository {
       return null;
     }
  */
+
     return await this._repository.delete(id);
   }
 

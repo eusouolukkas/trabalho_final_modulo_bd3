@@ -1,12 +1,12 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
-import { UserEntity } from "./user.entity";
+import { UserEntity } from "./users.entity";
 
 @Entity({
   name: "tasks",
 })
 export class TasksEntity {
   @PrimaryColumn()
-  id!: string;
+  id: string;
 
   @Column()
   title: string;
@@ -19,7 +19,6 @@ export class TasksEntity {
   })
   idUser: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.task)
   @JoinColumn({ name: "id_user" })
   user: UserEntity;
 }
