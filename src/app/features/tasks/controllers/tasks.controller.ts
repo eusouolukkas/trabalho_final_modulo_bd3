@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { CacheRepository } from "../../../shared/repositories/cache.repository";
+import { serverError, success } from "../../../shared/util/response.helper";
 import { TasksRepository } from "../repositories/tasks.repository";
 import { CreateTaskUseCase } from "../usecases/create-task.usecase";
 import { ListTasksUseCase } from "../usecases/list-tasks.usecase";
@@ -15,21 +16,17 @@ export class TasksController {
 
       const result = await usecase.execute();
 
-      return res.status(200).send({
-        ok: true,
-        message: "Listando todas as tarefas!",
-        data: result,
-      });
+      if (!result) {
+        return null;
+      }
+
+      return success(res, result);
     } catch (error: any) {
-      return res.status(500).send({
-        ok: false,
-        message: "Instabilidade no servidor!",
-        error: error.toString(),
-      });
+      return serverError(res, error);
     }
   }
 
-  /* public async updateTask(req: Request, res: Response) {
+  /*  public async updateTask(req: Request, res: Response) {
     try {
       const { taskId } = req.params;
       const { title, description } = req.body;

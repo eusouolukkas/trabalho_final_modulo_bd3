@@ -18,7 +18,7 @@ export class ListTasksUseCase {
       };
     }
 
-    const result = await this.repository.list();
+    const result = await this.repository.list("tasks");
     const resultJson = result.map((item) => item.toJson());
 
     await this.cacheRepository.set("tasks", resultJson);

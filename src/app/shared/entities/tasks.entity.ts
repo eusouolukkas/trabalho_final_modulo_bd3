@@ -19,6 +19,9 @@ export class TasksEntity {
   })
   idUser: string;
 
+  @ManyToOne(() => UserEntity, {
+    eager: true,
+  })
   @JoinColumn({ name: "id_user" })
-  user: UserEntity;
+  users: UserEntity;
 }

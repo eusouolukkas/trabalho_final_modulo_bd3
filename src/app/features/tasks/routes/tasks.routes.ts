@@ -7,7 +7,7 @@ const tasksRoutes = Router({
 
 //---------------TasksRoutes--------------
 
-tasksRoutes.get("/", new TasksController().listTask);
+tasksRoutes.get("/:userId", new TasksController().listTask);
 
 tasksRoutes.post("/:userId", new TasksController().createTask);
 

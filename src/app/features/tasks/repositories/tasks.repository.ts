@@ -16,9 +16,9 @@ export class TasksRepository {
   private _repository =
     DatabaseConnection.connection.getRepository(TasksEntity);
 
-  public async list() {
+  public async list(id: string) {
     const result = await this._repository.find({
-      relations: ["user"],
+      relations: ["users"],
     });
 
     const tasks = result.map((item) => {
@@ -84,10 +84,10 @@ export class TasksRepository {
     const user =
       userModel ??
       UserModel.create(
-        taskEntity.user.name,
-        taskEntity.user.email,
-        taskEntity.user.password,
-        taskEntity.user.id
+        taskEntity.users.name,
+        taskEntity.users.email,
+        taskEntity.users.password,
+        taskEntity.users.id
       );
 
     return TasksModel.create(
